@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { supabase } from "@/lib/supabaseClient"
+import { getSupabaseServerClient } from "@/lib/supabaseServer"
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -13,6 +13,8 @@ export async function GET(request: Request) {
   const end = start + limit - 1
 
   try {
+    const supabase = await getSupabaseServerClient()
+
     let query = supabase
       .from("books")
       .select(`

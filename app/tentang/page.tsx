@@ -1,18 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { createClient } from "@supabase/supabase-js"
+import { getSupabaseBrowserClient } from "@/lib/supabaseClient"
 import { MainNav } from "@/components/main-nav"
 import { Book, PenTool, Mail } from "lucide-react"
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error("Variabel lingkungan Supabase tidak ditemukan")
-}
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 interface Category {
   id: string
@@ -25,6 +16,7 @@ export default function TentangPage() {
   useEffect(() => {
     async function fetchCategories() {
       try {
+        const supabase = getSupabaseBrowserClient()
         const { data, error } = await supabase.from("categories").select("*")
         if (error) throw error
         setCategories(data || [])
