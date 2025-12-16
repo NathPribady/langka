@@ -4,16 +4,7 @@ import { useParams } from "next/navigation"
 import { GoogleDriveViewer } from "@/components/google-drive-viewer"
 import { MainNav } from "@/components/main-nav"
 import { useState, useEffect } from "react"
-import { createClient } from "@supabase/supabase-js"
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error("Variabel lingkungan Supabase tidak ditemukan")
-}
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { getSupabaseBrowserClient } from "@/lib/supabaseClient"
 
 export default function ReadPage() {
   const params = useParams()
@@ -26,6 +17,7 @@ export default function ReadPage() {
 
   async function fetchCategories() {
     try {
+      const supabase = getSupabaseBrowserClient()
       const { data, error } = await supabase.from("categories").select("*")
       if (error) throw error
       setCategories(data || [])

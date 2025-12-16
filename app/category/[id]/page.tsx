@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, Suspense } from "react"
-import { createClient } from "@supabase/supabase-js"
+import { getSupabaseBrowserClient } from "@/lib/supabaseClient"
 import { BookGrid } from "@/components/book-grid"
 import { SearchField } from "@/components/search-field"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -16,15 +16,6 @@ function generateGradient(color: string): string {
   const lighterColor = `rgba(${r + (255 - r) * 0.6}, ${g + (255 - g) * 0.6}, ${b + (255 - b) * 0.6}, 0.8)`
   return `linear-gradient(135deg, ${color}, ${lighterColor})`
 }
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error("Variabel lingkungan Supabase tidak ditemukan")
-}
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 interface Book {
   id: number
@@ -73,6 +64,7 @@ function CategoryPageContent({ params }: { params: { id: string } }) {
       setIsLoading(true)
       setError(null)
 
+      const supabase = getSupabaseBrowserClient()
       const { data: categoryData, error: categoryError } = await supabase
         .from("categories")
         .select("id, name, color")
@@ -83,7 +75,7 @@ function CategoryPageContent({ params }: { params: { id: string } }) {
       if (!categoryData) throw new Error("Kategori tidak ditemukan")
 
       setCategory(categoryData)
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message)
       console.error("Error mengambil data:", err)
     } finally {
@@ -93,6 +85,7 @@ function CategoryPageContent({ params }: { params: { id: string } }) {
 
   async function fetchCategories() {
     try {
+      const supabase = getSupabaseBrowserClient()
       const { data, error } = await supabase.from("categories").select("*")
 
       if (error) throw new Error(error.message)
