@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { createClient } from "@supabase/supabase-js"
+import { supabase } from "@/lib/supabaseClient"
 import { SearchField } from "@/components/search-field"
 import { FeaturedBooks } from "@/components/featured-book"
 import { BookGrid } from "@/components/book-grid"
@@ -10,15 +10,6 @@ import { CampaignBanner } from "@/components/campaign-banner"
 import { Skeleton } from "@/components/ui/skeleton"
 import { MainNav } from "@/components/main-nav"
 import { Sparkles, BookOpen, Library, Shuffle } from "lucide-react"
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error("Variabel lingkungan Supabase tidak ditemukan")
-}
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 interface Book {
   id: number
@@ -224,7 +215,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-        <div className="absolute inset-0 bg-[url('/placeholder.svg?height=800&width=1200&query=abstract+book+pattern')] opacity-10"></div>
+        <div className="absolute inset-0 bg-[url('/abstract-book-pattern.png')] opacity-10"></div>
         <div className="relative container mx-auto px-4 py-12 sm:py-16 lg:py-24">
           <div className="text-center space-y-4 sm:space-y-6">
             <div className="flex items-center justify-center gap-2 mb-2 sm:mb-4">
@@ -322,7 +313,8 @@ export default function Home() {
                       Urutan Berubah Setiap Hari
                     </h4>
                     <p className="text-xs sm:text-sm text-blue-700 dark:text-blue-300 leading-relaxed">
-                      Koleksi buku di bawah ini disusun secara acak setiap hari untuk memberikan saran buku-buku menarik yang mungkin terlewat!
+                      Koleksi buku di bawah ini disusun secara acak setiap hari untuk memberikan saran buku-buku menarik
+                      yang mungkin terlewat!
                     </p>
                   </div>
                 </div>
